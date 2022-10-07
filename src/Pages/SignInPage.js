@@ -5,17 +5,17 @@ import Button from "../components/button/Button";
 import Field from "../components/field/Field";
 import Input from "../components/input/Input";
 import Label from "../components/label/Label";
+import { useAuth } from "../contexts/auth-context";
 import IconEyeClose from "../Icon/IconEyeClose";
 import IconEyeOpen from "../Icon/IconEyeOpen";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth, db } from "../firebase-blog/firebase-config";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase-blog/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
 
-const SignUpPageStyle = styled.div`
+const SignInStyle = styled.div`
   min-height: 100vh;
   padding: 40px;
   /* background-color: ${(props) => props.theme.primary}; */
@@ -30,7 +30,6 @@ const SignUpPageStyle = styled.div`
     font-weight: bold;
     color: ${(props) => props.theme.primary};
   }
-
   .form {
     max-width: 600px;
     margin: 0 auto;
@@ -48,9 +47,7 @@ const SignUpPageStyle = styled.div`
     }
   }
 `;
-
 const schema = yup.object({
-  fullname: yup.string().required("Please enter your fullname"),
   email: yup
     .string()
     .email("Please enter valid email address")
@@ -61,9 +58,9 @@ const schema = yup.object({
     .required("Please enter your password"),
 });
 
-const SignUpPage = () => {
+const SignInPage = () => {
+  const { userInfo } = useAuth();
   const [togglePassword, setTogglePassword] = useState(false);
-  const handleNavigate = useNavigate();
   const {
     handleSubmit,
     control,
@@ -73,27 +70,16 @@ const SignUpPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-
+  const handleNavigate = useNavigate();
   const onSubmit = async (value) => {
     if (!isValid) return;
-    console.log(value);
-    const user = await createUserWithEmailAndPassword(
-      auth,
-      value.email,
-      value.password
-    );
-    await updateProfile(auth.currentUser, {
-      displayName: value.fullname,
-    });
-    const colRef = collection(db, "users");
-    await addDoc(colRef, {
-      fullname: value.fullname,
-      email: value.email,
-      password: value.password,
-    });
-    toast.success("successfully!");
+    await signInWithEmailAndPassword(auth, value.email, value.password);
     handleNavigate("/");
   };
+
+  useEffect(() => {
+    if (userInfo?.email) handleNavigate("/");
+  }, [userInfo, handleNavigate]);
   useEffect(() => {
     const errorsList = Object.values(errors);
     if (errorsList.length > 0) {
@@ -101,22 +87,11 @@ const SignUpPage = () => {
     }
   }, [errors]);
   return (
-    <SignUpPageStyle>
+    <SignInStyle>
       <div className="container">
         <img src="guitar.svg" alt="guitar" className="logo" />
         <h1 className="heading">Guitar blogging</h1>
         <form className="form" onSubmit={handleSubmit(onSubmit)}>
-          <Field>
-            <Label htmlFor="fullname" className="label">
-              Fullname
-            </Label>
-            <Input
-              type="text"
-              name="fullname"
-              placeholder="Enter your full name"
-              control={control}
-            ></Input>
-          </Field>
           <Field>
             <Label htmlFor="email" className="label">
               Email
@@ -152,7 +127,7 @@ const SignUpPage = () => {
             </Input>
           </Field>
           <div className="account">
-            Already have an account? <NavLink to={"/sign-in"}>Sign in</NavLink>
+            Don't have an account? <NavLink to={"/sign-up"}>Sign up</NavLink>
           </div>
           <div className="button-container">
             <Button
@@ -160,14 +135,14 @@ const SignUpPage = () => {
               isLoading={isSubmitting}
               disabled={isSubmitting}
             >
-              Sign Up
+              Sign In
               {/* <LoadingSpinner></LoadingSpinner> */}
             </Button>
           </div>
         </form>
       </div>
-    </SignUpPageStyle>
+    </SignInStyle>
   );
 };
 
-export default SignUpPage;
+export default SignInPage;

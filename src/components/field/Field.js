@@ -8,7 +8,7 @@ const FieldStyle = styled.div`
   align-items: flex-start;
   row-gap: 10px;
   &:last-child {
-    margin-bottom: 0;
+    margin-bottom: 0px;
   }
 `;
 
