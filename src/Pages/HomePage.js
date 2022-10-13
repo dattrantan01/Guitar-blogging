@@ -1,8 +1,12 @@
 import { signOut } from "firebase/auth";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+
 import styled from "styled-components";
-import Header from "../components/layout/Header";
+
+import HomeBanner from "../components/layout/home/HomeBanner";
+import HomeFeatures from "../components/layout/home/HomeFeatures";
+import HomeNewest from "../components/layout/home/HomeNewest";
+import Layout from "../components/layout/Layout";
 import { auth } from "../firebase-blog/firebase-config";
 
 const HomePageStyle = styled.div``;
@@ -15,7 +19,11 @@ const HomePage = () => {
   // };
   return (
     <HomePageStyle>
-      <Header></Header>
+      <Layout>
+        <HomeBanner></HomeBanner>
+        <HomeFeatures></HomeFeatures>
+        <HomeNewest></HomeNewest>
+      </Layout>
     </HomePageStyle>
   );
 };

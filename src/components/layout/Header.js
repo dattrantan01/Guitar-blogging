@@ -19,6 +19,7 @@ const menuList = [
 ];
 const HeaderStyle = styled.header`
   padding: 15px 0;
+  margin-bottom: 40px;
   .header-left {
     display: flex;
     align-items: center;
@@ -44,7 +45,7 @@ const HeaderStyle = styled.header`
 
   .search {
     margin-left: auto;
-    padding: 15px 25px;
+    padding: 15px 35px 15px 25px;
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 100%;
@@ -60,7 +61,7 @@ const HeaderStyle = styled.header`
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 25px;
+    right: 15px;
   }
   .search-button {
     width: 150px;
