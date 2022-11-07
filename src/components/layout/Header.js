@@ -80,6 +80,8 @@ const HeaderStyle = styled.header`
     object-fit: cover;
   }
 `;
+
+//header cua homepage
 const Header = () => {
   const { userInfo } = useAuth();
   const navigate = useNavigate();

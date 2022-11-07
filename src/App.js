@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import DashboardLayout from "./components/dashboard/DashBoardLayout";
-import PostAddNew from "./components/post/PostAddNew";
+import PostAddNew from "./module/post/PostAddNew";
 import PostManage from "./components/post/PostManage";
 import { AuthProvider } from "./contexts/auth-context";
 import DashboardPage from "./Pages/DashboardPage";

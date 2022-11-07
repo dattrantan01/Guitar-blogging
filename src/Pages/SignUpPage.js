@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-blog/firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 
 const SignUpPageStyle = styled.div`
   min-height: 100vh;
@@ -86,7 +86,7 @@ const SignUpPage = () => {
       displayName: value.fullname,
     });
     const colRef = collection(db, "users");
-    await addDoc(colRef, {
+    await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: value.fullname,
       email: value.email,
       password: value.password,

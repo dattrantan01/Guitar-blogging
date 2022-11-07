@@ -16,7 +16,7 @@ const PostMetaStyle = styled.div`
     border-radius: 100rem;
   }
 `;
-const PostMeta = ({ authorName = "Tran Dat", date = "Jan 22", className }) => {
+const PostMeta = ({ authorName = "Tan Dat", date = "Jan 22", className }) => {
   return (
     <PostMetaStyle className={className}>
       <span className="post-time">{date}</span>

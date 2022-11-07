@@ -1,5 +1,8 @@
-import React from "react";
+import { data } from "autoprefixer";
+import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { db } from "../../firebase-blog/firebase-config";
 import PostCategory from "./PostCategory";
 import PostMeta from "./PostMeta";
 const PostFeatureItemStyles = styled.div`
@@ -53,23 +56,49 @@ const PostFeatureItemStyles = styled.div`
     height: 272px;
   }
 `;
-const PostFeatureItem = () => {
+const PostFeatureItem = ({ data }) => {
+  const [category, setCategory] = useState({});
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const cateFetch = async () => {
+      const docRef = doc(db, "categories", data.category);
+      const docSnap = await getDoc(docRef);
+      setCategory(docSnap.data());
+    };
+    cateFetch();
+  }, [data.category]);
+  useEffect(() => {
+    const userFetch = async () => {
+      if (data.userId) {
+        const docRef = doc(db, "users", data.userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.data()) {
+          setUser(docSnap.data());
+        }
+      }
+    };
+    userFetch();
+  }, [data.userId]);
+  const date = () => {
+    const date = new Date(data?.createdAt?.seconds * 1000);
+    return new Date(date).toLocaleDateString("vi-VI");
+  };
   return (
     <PostFeatureItemStyles>
-      <img
-        src="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2662&q=80"
-        alt="unsplash"
-        className="post-image"
-      />
+      <img src={data.image} alt="" className="post-image" />
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          <PostCategory className="post-category">Kiến thức</PostCategory>
-          <PostMeta></PostMeta>
+          {category && (
+            <>
+              <PostCategory className="post-category">
+                {category.name}
+              </PostCategory>
+              <PostMeta authorName={user.fullname} date={date()}></PostMeta>
+            </>
+          )}
         </div>
-        <h3 className="post-title">
-          Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
-        </h3>
+        <h3 className="post-title">{data.title}</h3>
       </div>
     </PostFeatureItemStyles>
   );

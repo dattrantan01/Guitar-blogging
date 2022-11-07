@@ -17,6 +17,8 @@ const HeadingStyles = styled.h2`
     transform: translate(0, -150%);
   }
 `;
+
+//heading là một tiêu đề trong homepage
 const Heading = ({ className = "", children }) => {
   return <HeadingStyles className={className}>{children}</HeadingStyles>;
 };
