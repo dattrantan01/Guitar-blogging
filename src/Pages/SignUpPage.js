@@ -90,6 +90,8 @@ const SignUpPage = () => {
       fullname: value.fullname,
       email: value.email,
       password: value.password,
+      status: "active",
+      role: false,
     });
     toast.success("successfully!");
     handleNavigate("/");

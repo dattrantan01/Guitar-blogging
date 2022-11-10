@@ -12,6 +12,28 @@
     font-size: 16px;
     color: #232323;
   }
+  td {
+    vertical-align: middle;
+    padding: 15px 30px;
+    max-width: 400px;
+    overflow: hidden;
+  }
+  tr:nth-child(even){
+    background-color: #eff6ff;
+  }
+  th {
+    text-align: left;
+    padding: 20px 30px;
+    max-width: 600px;
+  }
+
+}
+.text-td {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dashboard-heading {
@@ -121,4 +143,7 @@
     }
   }
  
+}
+.form-layout {
+  @apply grid grid-cols-1 lg:grid-cols-2 lg:gap-x-10 mb-5 lg:mb-10;
 }

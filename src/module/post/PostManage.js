@@ -1,5 +1,5 @@
-import Table from "../table/Table";
-import Paginition from "../paginition/Paginition";
+import Table from "../../components/table/Table";
+import Paginition from "../../components/paginition/Paginition";
 import React from "react";
 
 const PostManage = () => {

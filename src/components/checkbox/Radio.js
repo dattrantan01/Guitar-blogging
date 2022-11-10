@@ -7,6 +7,7 @@ const Radio = ({ checked, children, control, name, ...rest }) => {
     name,
     defaultValue: "",
   });
+
   return (
     <label>
       <input

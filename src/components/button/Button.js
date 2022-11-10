@@ -12,6 +12,9 @@ const ButtonStyle = styled.button`
   font-weight: 600;
   font-size: 18px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-image: linear-gradient(
     to right bottom,
     ${(props) => props.theme.primary},

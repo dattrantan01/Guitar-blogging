@@ -248,7 +248,7 @@ const PostAddNew = () => {
           <Field>
             <Label>Feature Post</Label>
             <Toggle
-              on={watchHot === true}
+              checked={watchHot === true}
               onClick={() => {
                 setValue("hot", !watchHot);
               }}

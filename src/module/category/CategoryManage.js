@@ -1,0 +1,54 @@
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Button from "../../components/button/Button";
+import TableWithData from "../../components/table/TableWithData";
+import { db } from "../../firebase-blog/firebase-config";
+
+const CategoryManage = () => {
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const colRef = collection(db, "categories");
+    onSnapshot(colRef, (snapshot) => {
+      let result = [];
+      snapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          name: doc.data().name,
+          status: doc.data().status === 1 ? "Approved" : "Unapproved",
+          slug: doc.data().slug,
+        });
+      });
+      setCategories(result);
+    });
+  }, []);
+  const headerTable = ["Name", "Status", "Slug"];
+  const handleDeleteCategory = async (id) => {
+    const colRef = doc(db, "categories", id);
+    await deleteDoc(colRef);
+    toast.success("Delete success");
+  };
+  return (
+    <div>
+      <div className="flex flex-row justify-between mb-8">
+        <h1 className="dashboard-heading ">Manage Categories</h1>
+        <div className="max-w-[400px]">
+          <Button onClick={() => navigate("/manage/add-category")}>
+            Add new Category
+          </Button>
+        </div>
+      </div>
+      <TableWithData
+        head={headerTable}
+        data={categories}
+        handleDelete={handleDeleteCategory}
+        linkTo="/manage/update-category?id="
+      ></TableWithData>
+    </div>
+  );
+};
+
+export default CategoryManage;

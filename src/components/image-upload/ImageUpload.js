@@ -2,7 +2,7 @@ import React from "react";
 
 const ImageUpload = ({ onChange, name, image, deleteImage }) => {
   return (
-    <div className="w-full max-w-[500px] h-[200px] bg-green-300 relative">
+    <div className="w-full max-w-[500px] h-[300px] bg-green-300 relative">
       {image && (
         <div
           className="cursor-pointer absolute w-full h-full top-0 left-0 z-20 text-transparent hover:text-white hover:bg-opacity-10 hover:bg-black font-bold text-lg flex justify-center items-center"
