@@ -30,6 +30,8 @@ import ImageUpload from "../../components/image-upload/ImageUpload";
 import Input from "../../components/input/Input";
 import Label from "../../components/label/Label";
 import Toggle from "../../components/toggle/Toggle";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import { db } from "../../firebase-blog/firebase-config";
 import { postStatus } from "../../utils/constants";
@@ -55,6 +57,8 @@ const PostUpdate = () => {
   const [imageName, setImageName] = useState("");
   const watchHot = watch("hot");
   const watchStatus = watch("status");
+  const [content, setContent] = useState("");
+  console.log("content", content);
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "categories");
@@ -82,13 +86,15 @@ const PostUpdate = () => {
         hot: postData.data().hot,
       });
       setPrevPost(postData.data());
+      setImageName(postData.data().imageName);
       setImageUrl(postData.data().image);
       setSelectCategory(postData.data().category);
+      setContent(postData.data().content);
     };
     fecthPost();
     getData();
   }, [id, reset, setPrevPost]);
-
+  console.log(content);
   const updatePostHandler = async (values) => {
     values.slug = slugify(values.slug || values.title);
 
@@ -101,6 +107,7 @@ const PostUpdate = () => {
       status: values.status,
       category: { id: values.category, name: selectCategory?.name },
       image: imageUrl,
+      content: content,
     });
     toast.success("success");
 
@@ -255,6 +262,7 @@ const PostUpdate = () => {
             </Dropdown>
           </Field>
         </div>
+
         <div className="grid grid-cols-2 gap-x-10 mb-10">
           <Field>
             <Label>Feature Post</Label>
@@ -267,6 +275,11 @@ const PostUpdate = () => {
           </Field>
           <Field></Field>
         </div>
+        <div className="flex flex-col gap-5 mb-10">
+          <Label>Content</Label>
+          <ReactQuill theme="snow" value={content} onChange={setContent} />
+        </div>
+
         <Button type="submit" className="mx-auto">
           Update post
         </Button>

@@ -81,6 +81,7 @@ const PostAddNew = () => {
       status: values.status,
       category: { id: values.category, name: selectCategory?.name },
       image: imageUrl,
+      imageName: imageName,
       userId: { id: userInfo.uid, name: userInfo.displayName },
       createdAt: serverTimestamp(),
     });

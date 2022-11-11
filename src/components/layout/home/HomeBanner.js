@@ -67,7 +67,7 @@ const HomeBanner = () => {
                   backgroundImage: "none",
                   color: "#2EBAC1",
                 }}
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/sign-in")}
               >
                 Get started
               </Button>

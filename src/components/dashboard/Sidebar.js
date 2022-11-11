@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../../contexts/auth-context";
 const SidebarStyles = styled.div`
   width: 300px;
   background: #ffffff;
@@ -114,30 +115,10 @@ const sidebarLinks = [
       </svg>
     ),
   },
-  {
-    title: "Logout",
-    url: "/",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-        />
-      </svg>
-    ),
-    onClick: () => {},
-  },
 ];
 const Sidebar = () => {
   const navigate = useNavigate();
+  const { userInfo } = useAuth();
   return (
     <SidebarStyles className="sidebar">
       <div
@@ -149,12 +130,19 @@ const Sidebar = () => {
         <img src="/guitar.svg" alt="" />
         <span>Blogging</span>
       </div>
-      {sidebarLinks.map((link) => (
-        <NavLink to={link.url} className="menu-item" key={link.title}>
-          <span className="menu-icon">{link.icon}</span>
-          <span className="menu-text">{link.title}</span>
-        </NavLink>
-      ))}
+      {userInfo.role !== 1
+        ? sidebarLinks.slice(0, 1).map((link) => (
+            <NavLink to={link.url} className="menu-item" key={link.title}>
+              <span className="menu-icon">{link.icon}</span>
+              <span className="menu-text">{link.title}</span>
+            </NavLink>
+          ))
+        : sidebarLinks.map((link) => (
+            <NavLink to={link.url} className="menu-item" key={link.title}>
+              <span className="menu-icon">{link.icon}</span>
+              <span className="menu-text">{link.title}</span>
+            </NavLink>
+          ))}
     </SidebarStyles>
   );
 };

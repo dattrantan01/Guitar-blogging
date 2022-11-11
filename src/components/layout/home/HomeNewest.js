@@ -1,5 +1,7 @@
-import React from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { db } from "../../../firebase-blog/firebase-config";
 import PostItem from "../../post/PostItem";
 import PostNewestItem from "../../post/PostNewestItem";
 import PostNewestLarge from "../../post/PostNewestLarge";
@@ -20,23 +22,30 @@ const HomeNewestStyles = styled.div`
   }
 `;
 const HomeNewest = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    const colRef = collection(db, "posts");
+    onSnapshot(colRef, (snapshot) => {
+      let result = [];
+      snapshot.forEach((doc) => {
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      setPosts(result);
+    });
+  }, []);
+
   return (
     <HomeNewestStyles className="home-block">
       <div className="container">
-        <Heading>Mới nhất</Heading>
-        <div className="layout">
-          <PostNewestLarge></PostNewestLarge>
-          <div className="sidebar">
-            <PostNewestItem></PostNewestItem>
-            <PostNewestItem></PostNewestItem>
-            <PostNewestItem></PostNewestItem>
-          </div>
-        </div>
+        <Heading>Bài viết cũ hơn</Heading>
+
         <div className="grid-layout grid-layout--primary">
-          <PostItem></PostItem>
-          <PostItem></PostItem>
-          <PostItem></PostItem>
-          <PostItem></PostItem>
+          {posts.map((post) => (
+            <PostItem key={post.id} id={post.id} data={post}></PostItem>
+          ))}
         </div>
       </div>
     </HomeNewestStyles>

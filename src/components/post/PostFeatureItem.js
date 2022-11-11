@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import PostCategory from "./PostCategory";
@@ -7,6 +8,7 @@ const PostFeatureItemStyles = styled.div`
   border-radius: 16px;
   position: relative;
   height: 169px;
+  cursor: pointer;
   .post {
     &-image {
       width: 100%;
@@ -54,22 +56,23 @@ const PostFeatureItemStyles = styled.div`
   }
 `;
 const PostFeatureItem = ({ data }) => {
+  const navigate = useNavigate();
   const date = () => {
     const date = new Date(data?.createdAt?.seconds * 1000);
     return new Date(date).toLocaleDateString("vi-VI");
   };
   return (
-    <PostFeatureItemStyles>
-      <img src={data.image} alt="" className="post-image" />
+    <PostFeatureItemStyles onClick={() => navigate(`/${data?.id}`)}>
+      <img src={data?.image} alt="" className="post-image" />
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          {data.category && (
+          {data?.category && (
             <>
               <PostCategory className="post-category">
-                {data.category.name}
+                {data?.category.name}
               </PostCategory>
-              <PostMeta authorName={data.userId.name} date={date()}></PostMeta>
+              <PostMeta authorName={data?.userId.name} date={date()}></PostMeta>
             </>
           )}
         </div>

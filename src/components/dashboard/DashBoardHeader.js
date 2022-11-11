@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../../contexts/auth-context";
 import Button from "../button/Button";
 const DashboardHeaderStyles = styled.div`
   background-color: white;
@@ -26,21 +27,18 @@ const DashboardHeaderStyles = styled.div`
 
 const DashboardHeader = () => {
   const navigate = useNavigate();
-
+  const { userInfo } = useAuth();
   return (
     <DashboardHeaderStyles>
       <Button
-        onClick={() => navigate("/dashboard")}
+        onClick={() => navigate("/manage/add-post")}
         className="header-button"
         height="52px"
       >
         Write new post
       </Button>
       <div className="header-avatar">
-        <img
-          src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80"
-          alt=""
-        />
+        <img src={userInfo?.avatar} alt="" />
       </div>
     </DashboardHeaderStyles>
   );

@@ -45,6 +45,7 @@ const PostManage = () => {
         data={posts}
         handleDelete={handleDeleteCategory}
         linkTo="/manage/update-post?id="
+        routeToDetail={true}
       ></TableWithData>
     </div>
   );

@@ -3,6 +3,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../button/Button";
 import { useAuth } from "../../contexts/auth-context";
+
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase-blog/firebase-config";
 const menuList = [
   {
     url: "/",
@@ -13,7 +16,7 @@ const menuList = [
     title: "Blog",
   },
   {
-    url: "/#",
+    url: "/manage/user-profile",
     title: "Contact",
   },
 ];
@@ -43,30 +46,6 @@ const HeaderStyle = styled.header`
     font-weight: 500;
   }
 
-  .search {
-    margin-left: auto;
-    padding: 15px 35px 15px 25px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 320px;
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  .search-input {
-    flex: 1;
-  }
-  .search-icon {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 15px;
-  }
-  .search-button {
-    width: 150px;
-    margin-left: 20px;
-  }
   .user {
     width: 60px;
     height: 60px;
@@ -88,6 +67,9 @@ const Header = () => {
   const handleNavigate = () => {
     navigate("/sign-in");
   };
+  const handleSignOut = () => {
+    signOut(auth);
+  };
   return (
     <HeaderStyle>
       <div className="container">
@@ -106,43 +88,7 @@ const Header = () => {
               );
             })}
           </ul>
-          <div className="search">
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search..."
-            />
-            <span className="search-icon">
-              <svg
-                width="18"
-                height="17"
-                viewBox="0 0 18 17"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <ellipse
-                  cx="7.66669"
-                  cy="7.05161"
-                  rx="6.66669"
-                  ry="6.05161"
-                  stroke="#999999"
-                  strokeWidth="1.5"
-                />
-                <path
-                  d="M17.0001 15.5237L15.2223 13.9099L14.3334 13.103L12.5557 11.4893"
-                  stroke="#999999"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M11.6665 12.2964C12.9671 12.1544 13.3706 11.8067 13.4443 10.6826"
-                  stroke="#999999"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </span>
-          </div>
+          <div className="ml-auto">{userInfo?.displayName}</div>
           {!userInfo?.email ? (
             <div className="search-button">
               <Button height="56px" onClick={handleNavigate}>
@@ -150,13 +96,33 @@ const Header = () => {
               </Button>
             </div>
           ) : (
-            <div className="user">
-              <img
-                src="https://images.unsplash.com/photo-1623794858380-804e97709693?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"
-                alt=""
-                className="user-avatar"
-              />
-            </div>
+            <>
+              <div className="user mr-8">
+                <img src={userInfo?.avatar} alt="" className="user-avatar" />
+              </div>
+              <div
+                className="rotate-180 cursor-position"
+                onClick={handleSignOut}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M3 4.25A2.25 2.25 0 015.25 2h5.5A2.25 2.25 0 0113 4.25v2a.75.75 0 01-1.5 0v-2a.75.75 0 00-.75-.75h-5.5a.75.75 0 00-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 00.75-.75v-2a.75.75 0 011.5 0v2A2.25 2.25 0 0110.75 18h-5.5A2.25 2.25 0 013 15.75V4.25z"
+                    clipRule="evenodd"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    d="M19 10a.75.75 0 00-.75-.75H8.704l1.048-.943a.75.75 0 10-1.004-1.114l-2.5 2.25a.75.75 0 000 1.114l2.5 2.25a.75.75 0 101.004-1.114l-1.048-.943h9.546A.75.75 0 0019 10z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </>
           )}
         </div>
       </div>

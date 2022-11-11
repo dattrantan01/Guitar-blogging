@@ -3,7 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
-const TableWithData = ({ head, data, linkTo, handleDelete }) => {
+const TableWithData = ({
+  head,
+  data,
+  linkTo,
+  handleDelete,
+  routeToDetail = false,
+}) => {
   const navigate = useNavigate();
   return (
     <div className="w-full overflow-x-auto shadow-md rounded-lg">
@@ -26,7 +32,13 @@ const TableWithData = ({ head, data, linkTo, handleDelete }) => {
           {data?.length > 0 &&
             data.map((item, index) => {
               return (
-                <tr key={index}>
+                <tr
+                  key={index}
+                  onClick={() => {
+                    if (!routeToDetail) return;
+                    navigate(`/${item.id}`);
+                  }}
+                >
                   <td>{index + 1}</td>
                   {Object.values(item)
                     .slice(1, head.length + 1)

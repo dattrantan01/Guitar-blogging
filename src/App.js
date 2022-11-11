@@ -26,7 +26,7 @@ function App() {
           <Route path="/" element={<HomePage></HomePage>}></Route>
           <Route path="/blog" element={<div>blog</div>}></Route>
           <Route
-            path="/:slug"
+            path="/:id"
             element={<PostDetailsPage></PostDetailsPage>}
           ></Route>
           <Route element={<DashboardLayout></DashboardLayout>}>
