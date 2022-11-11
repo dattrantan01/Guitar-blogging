@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 const SidebarStyles = styled.div`
   width: 300px;
@@ -137,9 +137,15 @@ const sidebarLinks = [
   },
 ];
 const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <SidebarStyles className="sidebar">
-      <div className="sidebar-logo">
+      <div
+        className="sidebar-logo cursor-pointer"
+        onClick={() => {
+          navigate("/");
+        }}
+      >
         <img src="/guitar.svg" alt="" />
         <span>Blogging</span>
       </div>

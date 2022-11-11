@@ -1,40 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import slugify from "react-slugify";
-import styled from "styled-components";
-import { postStatus } from "../../utils/constants";
-import Button from "../../components/button/Button";
-import Radio from "../../components/checkbox/Radio";
-import Dropdown from "../../components/dropdown/Dropdown";
-import Field from "../../components/field/Field";
-import Input from "../../components/input/Input";
-import Label from "../../components/label/Label";
-import { db } from "../../firebase-blog/firebase-config";
 import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import {
+  deleteObject,
+  getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
 } from "firebase/storage";
-import {
-  addDoc,
-  collection,
-  getDocs,
-  query,
-  serverTimestamp,
-  where,
-} from "firebase/firestore";
-import Toggle from "../../components/toggle/Toggle";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import slugify from "react-slugify";
+import { toast } from "react-toastify";
+import Button from "../../components/button/Button";
+import Radio from "../../components/checkbox/Radio";
+import Dropdown from "../../components/dropdown/Dropdown";
+import List from "../../components/dropdown/List";
 import Option from "../../components/dropdown/Option";
 import Select from "../../components/dropdown/Select";
-import List from "../../components/dropdown/List";
-import { useAuth } from "../../contexts/auth-context";
-import { toast } from "react-toastify";
+import Field from "../../components/field/Field";
 import ImageUpload from "../../components/image-upload/ImageUpload";
-const PostAddNewStyles = styled.div``;
+import Input from "../../components/input/Input";
+import Label from "../../components/label/Label";
+import Toggle from "../../components/toggle/Toggle";
 
-const PostAddNew = () => {
+import { db } from "../../firebase-blog/firebase-config";
+import { postStatus } from "../../utils/constants";
+
+const PostUpdate = () => {
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const id = params.get("id");
   const { control, watch, setValue, handleSubmit, reset } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -45,8 +48,8 @@ const PostAddNew = () => {
       hot: false,
     },
   });
-  const { userInfo } = useAuth();
-  const [selectCategory, setSelectCatergory] = useState();
+  const [prevPost, setPrevPost] = useState({});
+  const [selectCategory, setSelectCategory] = useState();
   const [categories, setCategories] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
   const [imageName, setImageName] = useState("");
@@ -67,33 +70,41 @@ const PostAddNew = () => {
 
       setCategories(result);
     }
-    getData();
-  }, []);
+    const fecthPost = async () => {
+      const colRef = doc(db, "posts", id);
+      const postData = await getDoc(colRef);
 
-  const addPostHandler = async (values) => {
+      reset({
+        title: postData.data().title,
+        slug: postData.data().slug,
+        status: postData.data().status,
+        category: postData.data().category.id,
+        hot: postData.data().hot,
+      });
+      setPrevPost(postData.data());
+      setImageUrl(postData.data().image);
+      setSelectCategory(postData.data().category);
+    };
+    fecthPost();
+    getData();
+  }, [id, reset, setPrevPost]);
+
+  const updatePostHandler = async (values) => {
     values.slug = slugify(values.slug || values.title);
 
-    const colRef = collection(db, "posts");
-    await addDoc(colRef, {
+    const colRef = doc(db, "posts", id);
+    await updateDoc(colRef, {
+      ...prevPost,
       title: values.title,
       slug: values.slug,
       hot: values.hot,
       status: values.status,
       category: { id: values.category, name: selectCategory?.name },
       image: imageUrl,
-      userId: { id: userInfo.uid, name: userInfo.displayName },
-      createdAt: serverTimestamp(),
     });
     toast.success("success");
-    reset({
-      title: "",
-      slug: "",
-      status: "",
-      category: "",
-      hot: false,
-    });
-    setImageUrl("");
-    setSelectCatergory(null);
+
+    navigate("/manage/post");
   };
   const handleUploadImage = (file) => {
     if (!file) return;
@@ -158,12 +169,12 @@ const PostAddNew = () => {
   };
   const handleClickOption = (item) => {
     setValue("category", item.id);
-    setSelectCatergory(item);
+    setSelectCategory(item);
   };
   return (
-    <PostAddNewStyles>
-      <h1 className="dashboard-heading text-primary">Add new post</h1>
-      <form onSubmit={handleSubmit(addPostHandler)}>
+    <div>
+      <h1 className="dashboard-heading text-primary">Update post</h1>
+      <form onSubmit={handleSubmit(updatePostHandler)}>
         <div className="grid grid-cols-2 gap-x-10 mb-10">
           <Field>
             <Label>Title</Label>
@@ -257,11 +268,11 @@ const PostAddNew = () => {
           <Field></Field>
         </div>
         <Button type="submit" className="mx-auto">
-          Add new post
+          Update post
         </Button>
       </form>
-    </PostAddNewStyles>
+    </div>
   );
 };
 
-export default PostAddNew;
+export default PostUpdate;
