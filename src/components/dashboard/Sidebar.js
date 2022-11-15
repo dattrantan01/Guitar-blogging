@@ -130,7 +130,7 @@ const Sidebar = () => {
         <img src="/guitar.svg" alt="" />
         <span>Blogging</span>
       </div>
-      {userInfo.role !== 1
+      {userInfo?.role !== 1
         ? sidebarLinks.slice(0, 1).map((link) => (
             <NavLink to={link.url} className="menu-item" key={link.title}>
               <span className="menu-icon">{link.icon}</span>

@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { createRoot } from "react-dom/client";
+import { AuthProvider } from "./contexts/auth-context";
 const container = document.getElementById("root");
 const root = createRoot(container);
 
@@ -18,8 +19,10 @@ root.render(
     <ThemeProvider theme={theme}>
       <GlobalStyles></GlobalStyles>
       <BrowserRouter>
-        <App />
-        <ToastContainer></ToastContainer>
+        <AuthProvider>
+          <App />
+          <ToastContainer></ToastContainer>
+        </AuthProvider>
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>

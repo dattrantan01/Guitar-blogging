@@ -32,14 +32,16 @@ const TableWithData = ({
           {data?.length > 0 &&
             data.map((item, index) => {
               return (
-                <tr
-                  key={index}
-                  onClick={() => {
-                    if (!routeToDetail) return;
-                    navigate(`/${item.id}`);
-                  }}
-                >
-                  <td>{index + 1}</td>
+                <tr key={index}>
+                  <td
+                    onClick={() => {
+                      if (!routeToDetail) return;
+                      navigate(`/${item.id}`);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    {index + 1}
+                  </td>
                   {Object.values(item)
                     .slice(1, head.length + 1)
                     .map((value, i) => {

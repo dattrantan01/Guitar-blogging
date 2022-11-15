@@ -17,7 +17,7 @@ const menuList = [
   },
   {
     url: "/manage/user-profile",
-    title: "Contact",
+    title: "Manage",
   },
 ];
 const HeaderStyle = styled.header`
